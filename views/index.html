@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<% include header.html %>
+    <div id="container" class="container">
+
+	<% if(success){ %>
+	  <div class="alert alert-success">
+	    <%= success %>
+	  </div>
+	<% } %>
+
+	<% if(error){ %>
+	  <div class="alert alert-error">
+	    <%= error %>
+	  </div>
+	<% } %>
+	
+        <div class="hero-unit">
+	  <h1>歡迎來到 Carpool</h1>
+	  <p>
+	    <a class="btn btn-primary btn-large" href="/login">登錄</a>
+	    <a class="btn btn-large" href="/reg">立即註冊</a>
+	  </p>
+	</div>
+
+	<% if(!user){ %>
+
+	<div class="row"> 
+	  <div class="span4">
+	    <h2>Carpool</h2>
+	     <p>Carpool</p>
+	  </div>
+	</div>
+
+	<% }else{ %>
+
+	<% if(user){ %>
+	  <form method="post" action="/post" class="well form-inline center" style="text-align: center;">
+	    <input type="text" class="span8" name="post">
+	    <button type="submit" class="btn btn-success"><i class="icon-comment icon-white"></i> 发言</button>
+	  </form>
+	<% } %>
+
+	<% posts.forEach(function(post, index) { 
+	  if (index % 3 == 0) { %>
+	    <div class="row">
+	<% } %>
+	  <div class="span4">
+	    <h2><a href="/u/<%= post.user %>"><%= post.user %></a> 说</h2>
+	    <p><small><%= post.time %></small></p>
+	    <p><%= post.post %></p>
+	  </div>
+	<% if (index % 3 == 2) { %>
+	    </div><!-- end row -->
+	<% } %>
+	<% }) %>
+	<% if (posts.length % 3 != 0) { %>
+	  </div><!-- end row -->
+	<% } %>
+
+	<% } %>
+
+      <hr />
+      <footer>
+        <% include foot.html %>
+      </footer>
+    </div>
+
+  </body>
+
+</html>

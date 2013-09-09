@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <title><%= title %>-Carpool</title>
+    <script src="javascripts/jquery-2.0.3.js"></script>
+    <script src="javascripts/bootstrap.js"></script>
+    <link href="stylesheets/bootstrap.css" rel="stylesheet" />
+    <link href="stylesheets/bootstrap-responsive.css" rel="stylesheet" />
+    <style type="text/css">
+      body{
+	padding-top: 60px;
+	padding-bottom: 40px;
+      }
+    </style>
+  </head>
+  <body>
+      <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="/">Carpool</a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li class="active"><a href="/">首頁</a></li>
+              <% if(!user){ %>
+                <li><a href="/login">登入</a></li>
+                <li><a href="/reg">註冊</a></li>
+              <% } else { %>
+                <li><a href="/logout">登出</a></li>
+              <% } %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDY0kkJiTPVd2U7aTOAwhc9ySH6oHxOIYM&sensor=false">
+		</script> 
+	</head>
+
+	<body>
+		<div id="googleMap" style="width:500px;height:380px;"></div>
+		<div id="demo"></div>
+		<div id="mapholder" style="height: 380px; width: 500px; position: relative; background-color: rgb(229, 227, 223); overflow: hidden;"></div>
+		<div>
+			<input id="address" type="textbox" value="Sydney, NSW">
+			latlng︰<input id="latlng" type="text">
+			reverse Address︰<input id="reverseAddress" type="text" size="40"/><p>
+			<input type="button" value="Encode" onclick="codeAddress()">
+			<button onclick="getLocation()">location</button>
+			<button onclick="getAddress()">address</button>
+		</div>
+		<script>
+			var x = document.getElementById("demo");
+			var latlon;
+			var lat;
+			var lon;
+			var geocoder;
+
+			var map;
+			var myCenter=new google.maps.LatLng(51.508742,-0.120850);
+			var geocoder;
+	
+			function initialize()
+			{
+				var mapProp = {
+					center:myCenter,
+					zoom:16,
+					mapTypeId:google.maps.MapTypeId.ROADMAP
+				};
+				geocoder = new google.maps.Geocoder();
+
+				map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+
+				google.maps.event.addListener(map, 'click', function(event) {
+					placeMarker(event.latLng);
+				});
+			}
+
+			function placeMarker(location) {
+				var marker = new google.maps.Marker({
+					position: location,
+					map: map,
+				});
+				var infowindow = new google.maps.InfoWindow({
+					content: 'Latitude: ' + location.lat() + '<br>Longitude: ' + location.lng()
+				});
+				infowindow.open(map,marker);
+			}
+
+			function codeAddress() {
+				var address = document.getElementById("address").value;
+				geocoder.geocode( { 'address': address}, function(results, status) {
+					if (status == google.maps.GeocoderStatus.OK) {
+						map.setCenter(results[0].geometry.location);
+						var marker = new google.maps.Marker({
+							map: map,
+							position: results[0].geometry.location
+						});
+						var infowindow = new google.maps.InfoWindow({
+							content: address
+						});
+						infowindow.open(map,marker);
+						} else {
+						alert("Geocode was not successful for the following reason: " + status);
+					}
+				});
+			}
+
+
+			google.maps.event.addDomListener(window, 'load', initialize);
+
+
+			function getLocation()
+			{
+				if (navigator.geolocation)
+				{
+					navigator.geolocation.getCurrentPosition(showPosition,showError);
+				}
+				else
+				{
+					x.innerHTML="Geolocation is not supported by this browser.";
+				}
+			}
+			function showPosition(position)
+			{
+				lat = position.coords.latitude;
+				lon = position.coords.longitude;
+				
+				latlon = new google.maps.LatLng(lat, lon)
+				document.getElementById('latlng').value = lat + "," + lon;
+				mapholder=document.getElementById('mapholder')
+				var myOptions={
+					center:latlon,zoom:1,
+					mapTypeId:google.maps.MapTypeId.ROADMAP,
+					mapTypeControl:false,
+					navigationControlOptions:{style:google.maps.NavigationControlStyle.SMALL}
+				};
+				var map=new google.maps.Map(document.getElementById("mapholder"),myOptions);
+				var marker=new google.maps.Marker({position:latlon,map:map,title:"You are here!"});
+	
+				// reverse geocoder
+				geocoder = new google.maps.Geocoder();
+			    geocoder.geocode({'latLng': latlon}, function(results, status) {
+			      if (status == google.maps.GeocoderStatus.OK) {
+			        if (results[0]) {
+			          map.setZoom(18);
+			          marker = new google.maps.Marker({
+			              position: latlon,
+			              map: map
+			          });
+			          document.getElementById('reverseAddress').value = results[0].formatted_address;
+			          document.getElementById('address').value = results[1].formatted_address;
+			        }
+			      } else {
+			        alert("Geocoder failed due to: " + status);
+			      }
+			    });
+			}
+			function showError(error)
+			{
+				switch(error.code)
+				{
+					case error.PERMISSION_DENIED:
+					x.innerHTML="User denied the request for Geolocation."
+					break;
+					case error.POSITION_UNAVAILABLE:
+					x.innerHTML="Location information is unavailable."
+					break;
+					case error.TIMEOUT:
+					x.innerHTML="The request to get user location timed out."
+					break;
+					case error.UNKNOWN_ERROR:
+					x.innerHTML="An unknown error occurred."
+					break;
+				}
+			}
+			
+			function getAddress(){			
+				geocoder = new google.maps.Geocoder();
+			    geocoder.geocode({'latLng': latlon}, function(results, status) {
+			      if (status == google.maps.GeocoderStatus.OK) {
+			        if (results[0]) {
+			          map.setZoom(15);
+			          marker = new google.maps.Marker({
+			              position: latlon,
+			              map: map
+			          });
+			          document.getElementById('reverseAddress').value = results[0].formatted_address;
+			        }
+			      } else {
+			        alert("Geocoder failed due to: " + status);
+			      }
+			    });
+
+			}
+		</script>
+	</body>
+</html>
+
