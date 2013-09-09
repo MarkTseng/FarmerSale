@@ -17,9 +17,6 @@ var flash = require('connect-flash');
 
 var app = express();
 
-// use ejs-locals for all ejs templates:
-app.engine('ejs', require('ejs-locals'));
-
 // all environments
 app.set('port', process.env.PORT || 80);
 app.set('views', __dirname + '/views');
